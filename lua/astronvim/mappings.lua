@@ -2,10 +2,6 @@ local utils = require "astronvim.utils"
 local is_available = utils.is_available
 local ui = require "astronvim.utils.ui"
 
-local keymap = vim.keymap -- for conciseness
-
-keymap.set("n", "<leader>,", ":b#<CR>")
-
 local maps = { i = {}, n = {}, v = {}, t = {} }
 
 local sections = {
@@ -17,7 +13,7 @@ local sections = {
   d = { desc = " Debugger" },
   g = { desc = " Git" },
   S = { desc = " Session" },
-  t = { desc = " Terminal" },
+  k = { desc = " Terminal" },
 }
 if not vim.g.icons_enabled then vim.tbl_map(function(opts) opts.desc = opts.desc:gsub("^.* ", "") end, sections) end
 
@@ -28,6 +24,8 @@ maps.n["k"] = { "v:count ? 'k' : 'gk'", expr = true, desc = "Move cursor up" }
 maps.v["j"] = maps.n.j
 maps.v["k"] = maps.n.k
 maps.n["<leader>,"] = { "<cmd>:b#<cr>", desc = "Switch buffer" }
+maps.n["<leader> "] = { function() require("telescope.builtin").buffers() end, desc = "Find buffers" }
+maps.n["<leader>t"] = { function() require("telescope.builtin").find_files() end, desc = "Find files" }
 maps.n["<leader>s"] = { "<cmd>wa<cr>", desc = "Save all" }
 maps.n["<leader>w"] = { "<cmd>w<cr>", desc = "Save current" }
 maps.n["<leader>q"] = { "<cmd>q<cr>", desc = "Quit" }
@@ -288,26 +286,26 @@ end
 
 -- Terminal
 if is_available "toggleterm.nvim" then
-  maps.n["<leader>t"] = sections.t
+  maps.n["<leader>k"] = sections.k
   if vim.fn.executable "lazygit" == 1 then
     maps.n["<leader>g"] = sections.g
     maps.n["<leader>gg"] = { function() utils.toggle_term_cmd "lazygit" end, desc = "ToggleTerm lazygit" }
-    maps.n["<leader>tl"] = { function() utils.toggle_term_cmd "lazygit" end, desc = "ToggleTerm lazygit" }
+    maps.n["<leader>kl"] = { function() utils.toggle_term_cmd "lazygit" end, desc = "ToggleTerm lazygit" }
   end
   if vim.fn.executable "node" == 1 then
-    maps.n["<leader>tn"] = { function() utils.toggle_term_cmd "node" end, desc = "ToggleTerm node" }
+    maps.n["<leader>kn"] = { function() utils.toggle_term_cmd "node" end, desc = "ToggleTerm node" }
   end
   if vim.fn.executable "gdu" == 1 then
-    maps.n["<leader>tu"] = { function() utils.toggle_term_cmd "gdu" end, desc = "ToggleTerm gdu" }
+    maps.n["<leader>ku"] = { function() utils.toggle_term_cmd "gdu" end, desc = "ToggleTerm gdu" }
   end
   if vim.fn.executable "btm" == 1 then
-    maps.n["<leader>tt"] = { function() utils.toggle_term_cmd "btm" end, desc = "ToggleTerm btm" }
+    maps.n["<leader>kt"] = { function() utils.toggle_term_cmd "btm" end, desc = "ToggleTerm btm" }
   end
   local python = vim.fn.executable "python" == 1 and "python" or vim.fn.executable "python3" == 1 and "python3"
-  if python then maps.n["<leader>tp"] = { function() utils.toggle_term_cmd(python) end, desc = "ToggleTerm python" } end
-  maps.n["<leader>tf"] = { "<cmd>ToggleTerm direction=float<cr>", desc = "ToggleTerm float" }
-  maps.n["<leader>th"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc = "ToggleTerm horizontal split" }
-  maps.n["<leader>tv"] = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", desc = "ToggleTerm vertical split" }
+  if python then maps.n["<leader>kp"] = { function() utils.toggle_term_cmd(python) end, desc = "ToggleTerm python" } end
+  maps.n["<leader>kf"] = { "<cmd>ToggleTerm direction=float<cr>", desc = "ToggleTerm float" }
+  maps.n["<leader>kh"] = { "<cmd>ToggleTerm size=10 direction=horizontal<cr>", desc = "ToggleTerm horizontal split" }
+  maps.n["<leader>kv"] = { "<cmd>ToggleTerm size=80 direction=vertical<cr>", desc = "ToggleTerm vertical split" }
   maps.n["<F7>"] = { "<cmd>ToggleTerm<cr>", desc = "Toggle terminal" }
   maps.t["<F7>"] = maps.n["<F7>"]
   maps.n["<C-'>"] = maps.n["<F7>"]
