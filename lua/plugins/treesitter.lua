@@ -19,6 +19,7 @@ return {
   },
   build = ":TSUpdate",
   opts = {
+    ensure_installed = { "lua" },
     highlight = { enable = true },
     incremental_selection = { enable = true },
     indent = { enable = true },

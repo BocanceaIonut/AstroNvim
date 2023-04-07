@@ -2,18 +2,22 @@ local utils = require "astronvim.utils"
 local is_available = utils.is_available
 local ui = require "astronvim.utils.ui"
 
+local keymap = vim.keymap -- for conciseness
+
+keymap.set("n", "<leader>,", ":b#<CR>")
+
 local maps = { i = {}, n = {}, v = {}, t = {} }
 
 local sections = {
-  f = { desc = "󰍉 Find" },
-  p = { desc = "󰏖 Packages" },
+  f = { desc = " Find" },
+  p = { desc = " Packages" },
   l = { desc = " LSP" },
   u = { desc = " UI" },
-  b = { desc = "󰓩 Buffers" },
+  b = { desc = " Buffers" },
   d = { desc = " Debugger" },
   g = { desc = " Git" },
-  S = { desc = "󱂬 Session" },
-  t = { desc = " Terminal" },
+  S = { desc = " Session" },
+  t = { desc = " Terminal" },
 }
 if not vim.g.icons_enabled then vim.tbl_map(function(opts) opts.desc = opts.desc:gsub("^.* ", "") end, sections) end
 
@@ -23,8 +27,10 @@ maps.n["j"] = { "v:count ? 'j' : 'gj'", expr = true, desc = "Move cursor down" }
 maps.n["k"] = { "v:count ? 'k' : 'gk'", expr = true, desc = "Move cursor up" }
 maps.v["j"] = maps.n.j
 maps.v["k"] = maps.n.k
-maps.n["<leader>w"] = { "<cmd>w<cr>", desc = "Save" }
-maps.n["<leader>q"] = { "<cmd>confirm q<cr>", desc = "Quit" }
+maps.n["<leader>,"] = { "<cmd>:b#<cr>", desc = "Switch buffer" }
+maps.n["<leader>s"] = { "<cmd>wa<cr>", desc = "Save all" }
+maps.n["<leader>w"] = { "<cmd>w<cr>", desc = "Save current" }
+maps.n["<leader>q"] = { "<cmd>q<cr>", desc = "Quit" }
 maps.n["<leader>n"] = { "<cmd>enew<cr>", desc = "New File" }
 maps.n["gx"] = { utils.system_open, desc = "Open the file under cursor with system app" }
 maps.n["<C-s>"] = { "<cmd>w!<cr>", desc = "Force write" }
@@ -49,8 +55,10 @@ maps.n["<leader>pl"] = { "<cmd>AstroChangelog<cr>", desc = "AstroNvim Changelog"
 -- Manage Buffers
 maps.n["<leader>c"] = { function() require("astronvim.utils.buffer").close() end, desc = "Close buffer" }
 maps.n["<leader>C"] = { function() require("astronvim.utils.buffer").close(0, true) end, desc = "Force close buffer" }
-maps.n["]b"] =
-  { function() require("astronvim.utils.buffer").nav(vim.v.count > 0 and vim.v.count or 1) end, desc = "Next buffer" }
+maps.n["]b"] = {
+  function() require("astronvim.utils.buffer").nav(vim.v.count > 0 and vim.v.count or 1) end,
+  desc = "Next buffer",
+}
 maps.n["[b"] = {
   function() require("astronvim.utils.buffer").nav(-(vim.v.count > 0 and vim.v.count or 1)) end,
   desc = "Previous buffer",
@@ -147,7 +155,7 @@ end
 
 -- NeoTree
 if is_available "neo-tree.nvim" then
-  maps.n["<leader>e"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
+  maps.n["<leader>nn"] = { "<cmd>Neotree toggle<cr>", desc = "Toggle Explorer" }
   maps.n["<leader>o"] = {
     function()
       if vim.bo.filetype == "neo-tree" then
